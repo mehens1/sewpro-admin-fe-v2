@@ -1,0 +1,139 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+:root {
+  --color-primary: #71AA37;
+  --color-primary-dark: #082904;
+  --color-primary-light: #156909;
+  --color-primary-text: #4b5563;
+   --color-secondary-bg: #e1e1e1;
+     --color-primary-bg-white: #ffffff;
+   
+
+  
+}
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.primary-bg-white{
+  background-color: var(--color-primary-bg-white);
+}
+
+
+.primary-bg {
+  background-color: var(--color-primary);
+}
+.scondary-bg{
+  background-color: var(--color-secondary-bg);
+}
+.my-text {
+  color: var(--color-primary-text);
+}
+
+.primary-bg-light {
+  background-color: var(--color-primary-light);
+}
+
+.primary-text {
+  color: var(--color-primary);
+}
+
+
+.custom-table .p-datatable-thead > tr > th {
+  background-color: var(--primary-bg, #71AA37); 
+  color: white;
+  font-weight: 600;
+  text-align:left;   
+  border: 1px solid #dfe4e9;
+  padding: 0.2rem 1rem;
+}
+
+.custom-table .p-datatable-tbody > tr > td {
+  border: 1px solid #e5e7eb; 
+  padding: 0.2rem 1rem;
+  text-align: left; 
+   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.custom-table .p-datatable-tbody > tr:hover {
+  background-color: #f6f8f7; 
+  transition: background 0.2s ease-in-out;
+}
+
+
+.custom-table .p-sortable-column-icon {
+  color: white !important;
+}
+
+.custom-table .p-paginator .p-dropdown {
+  margin-top: 0 !important;
+  display: inline-flex;
+  align-items: center;
+  height: 2.25rem;
+}
+
+.p-paginator .p-paginator-page.p-highlight {
+  border: 2px solid #71AA37;   
+  border-radius: 4px;          
+  font-weight: 600;
+  color: #71AA37 !important;   
+  background: transparent !important;
+  padding: 2px 6px !important; 
+  font-size: 0.85rem !important;
+  min-width: 28px !important; 
+  height: 28px !important;
+  line-height: 24px !important;
+}
+
+
+
+.custom-swal-btn {
+  background-color: #71AA37;
+  color: white;
+  padding: 12px 20px; 
+  border-radius: 4px;
+  font-size: 16px;     
+  border: none;
+  margin: 0 5px;
+  cursor: pointer;
+}
+
+.custom-swal-btn:hover {
+  background-color: #82b352;
+}
+
+
+.swal2-cancel.custom-swal-btn {
+  background-color: #d33;
+}
+
+.swal2-cancel.custom-swal-btn:hover {
+  background-color: #b91c1c;
+}
+
+.swal2-popup {
+  width: 90% !important;
+  max-width: 400px;
+}
+
+.swal2-title-sm {
+  @apply text-lg; 
+}
+
+.swal2-text-sm {
+  @apply text-sm text-gray-600; 
+}
+
+.swal2-popup-sm {
+  @apply p-4; 
+}
+
+
