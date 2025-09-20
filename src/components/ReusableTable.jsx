@@ -30,7 +30,7 @@ const ReusableTable = ({
           rows={rows}
           first={first}
           onPage={onPageChange}
-          rowsPerPageOptions={[10, 20, 25, 50]}   // 🔹 Dropdown options
+          rowsPerPageOptions={[5,10, 20, 25, 50]}   // 🔹 Dropdown options
           sortMode="multiple"
           showGridlines
           className="custom-table [&_.p-sortable-column-icon]:text-white  
