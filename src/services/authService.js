@@ -10,14 +10,31 @@ export const authService = {
       throw error;
     }
   },
-
   // // 🔹 Reset Password
-  // resetPassword: async (data) => {
-  //   try {
-  //     const response = await apiV1.post("/auth/reset-passowrd", data);
-  //     return response.data;
-  //   } catch (error) {
-  //     throw error;
-  //   }
-  // },
+  resetPassword: async (data) => {
+    try {
+      const response = await apiV1.post("/auth/reset-password", data);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  verifyCode: async (data) => {
+    try {
+      const response = await apiV1.post("/auth/verify-code", data);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  setNewPassword: async (data) => {
+    try {
+      const response = await apiV1.post("/auth/set-new-password", data);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
 };

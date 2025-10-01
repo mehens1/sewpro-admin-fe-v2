@@ -5,23 +5,15 @@ import Inputs from "../../components/inputs";
 import image from "../../assets/Logo1.png";
 import { showAlert } from "../../utilities/swal";
 import { authService } from "../../services/authService";
-import { useDispatch } from "react-redux";
-import { setToken } from "../../store/authSlice";
-import { setUser } from "../../store/userSlice";
 
-const Login = () => {
-  const dispatch = useDispatch();
+const ResetPassword = () => {
   const navigate = useNavigate();
 
-  const [formData, setFormData] = useState({
-    username: "",
-    password: "",
-    from_admin: true,
-  });
+  const [formData, setFormData] = useState({ email: "" });
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleSubmit = async (e) => {
@@ -29,42 +21,37 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const response = await authService.login(formData); // response = response.data
+      const response = await authService.resetPassword(formData);
 
       if (response.status) {
-        const res = response.data;
-        dispatch(setToken(res.token));
-        dispatch(setUser(res.user));
-
         await showAlert({
           type: "success",
-          title: "Login Successful",
-          text: `Welcome back, ${
-            res?.user?.first_name ?? res?.user?.email ?? "Admin"
-          }!`,
-          timer: 2000,
+          title: "Reset Link Sent",
+          text:
+            response?.data?.message || "Check your email for the reset link.",
+          timer: 3000,
         });
 
-        navigate("/");
+        // Redirect to verify-code page with email param
+        navigate(`/verify-code?email=${encodeURIComponent(formData.email)}`);
       } else {
         await showAlert({
           type: "error",
-          title: "Login Failed",
-          text: response.message || "Incorrect username or password",
+          title: "Reset Failed",
+          text: response.message || "Could not send reset email.",
         });
       }
     } catch (error) {
       let message = "Something went wrong.";
       if (error.response) {
-        // login-specific 401 or other errors will show here
-        message = error.response.data?.message || "Invalid credentials.";
+        message = error.response.data?.message || "Invalid request.";
       } else if (error.request) {
         message = "Network error. Please check your connection.";
       }
 
       await showAlert({
         type: "error",
-        title: "Login Failed",
+        title: "Reset Failed",
         text: message,
       });
     } finally {
@@ -97,49 +84,46 @@ const Login = () => {
               className="object-contain w-full h-full"
             />
           </div>
-          <marquee behavior="scroll" direction="right">
-            <h2 className="mt-4 text-2xl font-bold text-center text-gray-800">
-              Login to <span className="primary-text">Admin</span> Dash
-              <span className="primary-text">board</span>
-            </h2>
-          </marquee>
+          <h2 className="mt-4 text-2xl font-bold text-center primary-text">
+            Reset Password
+          </h2>
+          <p className="text-center text-gray-500">
+            Enter your registered email address so we can send you a
+            verification code to reset your password
+          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <Inputs
-            label="Username"
-            type="text"
-            name="username"
-            value={formData.username}
+            label="Email Address"
+            type="email"
+            name="email"
+            value={formData.email}
             onChange={handleChange}
-            placeholder="Enter username"
+            placeholder="Enter Registered Email Address"
             required
-            autoComplete="username"
+            autoComplete="email"
           />
 
-          <Inputs
-            label="Password"
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            placeholder="Enter password"
-            required
-            autoComplete="current-password"
-          />
-          <p className="text-right right">
-            Forgot Password?{" "}
-            <a href="/reset-password">
-              <strong className="primary-text">Recover</strong>
-            </a>
-          </p>
-          <Button type="submit" variant="primary" disabled={loading}>
-            {loading ? "Loading..." : "Login"}
+          <Button
+            type="submit"
+            variant="primary"
+            disabled={loading}
+            aria-label="Submit email to reset password"
+          >
+            {loading ? "Submitting..." : "Submit"}
           </Button>
         </form>
+
+        <p
+          className="mt-10 font-bold text-center cursor-pointer primary-text"
+          onClick={() => navigate("/login")}
+        >
+          Return to Log in
+        </p>
       </div>
     </div>
   );
 };
 
-export default Login;
+export default ResetPassword;
