@@ -39,7 +39,9 @@ const Login = () => {
         await showAlert({
           type: "success",
           title: "Login Successful",
-          text: `Welcome back, ${res.user.first_name ?? res.user.email ?? "Admin"}!`,
+          text: `Welcome back, ${
+            res?.user?.first_name ?? res?.user?.email ?? "Admin"
+          }!`,
           timer: 2000,
         });
 
@@ -85,15 +87,20 @@ const Login = () => {
   }, []);
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br primary-bg px-4">
-      <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
+    <div className="flex items-center justify-center min-h-screen px-4 bg-gradient-to-br primary-bg">
+      <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
         <div className="flex flex-col items-center mb-6">
-          <div className="w-16 h-16 rounded-full flex items-center justify-center shadow overflow-hidden">
-            <img src={image} alt="logo" className="w-full h-full object-contain" />
+          <div className="flex items-center justify-center w-16 h-16 overflow-hidden rounded-full shadow">
+            <img
+              src={image}
+              alt="logo"
+              className="object-contain w-full h-full"
+            />
           </div>
           <marquee behavior="scroll" direction="right">
-            <h2 className="mt-4 text-2xl font-bold text-gray-800 text-center">
-              Login to <span className="primary-text">Admin</span> Dash<span className="primary-text">board</span>
+            <h2 className="mt-4 text-2xl font-bold text-center text-gray-800">
+              Login to <span className="primary-text">Admin</span> Dash
+              <span className="primary-text">board</span>
             </h2>
           </marquee>
         </div>

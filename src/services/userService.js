@@ -1,6 +1,5 @@
 import { apiV1 } from "../api/axios";
 
-// Get all users (admin use-case maybe)
 export const getUsersService = async () => {
   try {
     const response = await apiV1.get("/users");
@@ -19,13 +18,10 @@ export const createUserService = async (formData) => {
 
     if (error.response) {
       const res = error.response.data;
-
-      // 🔹 Validation errors (422)
       if (error.response.status === 422 && res.errors) {
         const errorMessages = Object.values(res.errors).flat();
         message = errorMessages.join("\n");
       }
-      // 🔹 Handle backend 500 with SQL error inside res.errors.error
       else if (error.response.status === 500 && res.errors?.error) {
         const backendError = res.errors.error.toLowerCase();
 
@@ -36,10 +32,10 @@ export const createUserService = async (formData) => {
         } else if (backendError.includes("duplicate entry")) {
           message = "Duplicate entry detected.";
         } else {
-          message = res.errors.error; // fallback to raw SQL error
+          message = res.errors.error;
         }
       }
-      // 🔹 Generic backend error
+     
       else {
         message = res.message || "Request failed.";
       }
@@ -75,23 +71,18 @@ export const changePassword = async (data) => {
 
     if (error.response) {
       const res = error.response.data;
-
-      // Validation errors (422)
       if (error.response.status === 422 && res.errors) {
         const errorMessages = Object.values(res.errors).flat();
         message = errorMessages.join("\n");
       }
-      // Wrong old password (400 or 401 depending on backend)
       else if (error.response.status === 400 || error.response.status === 401) {
         message = res.message || "Old password is incorrect.";
       } else {
         message = res.message || "Request failed.";
       }
     } else if (error.request) {
-      // No response from server (network down or CORS issue)
       message = "Network error. Please check your connection.";
     } else {
-      // Other unexpected error
       message = error.message;
     }
 

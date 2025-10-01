@@ -10,7 +10,7 @@ const Users = () => {
   const { searchTerm } = useOutletContext();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false); // 🔹 Loader state for Save button
+  const [saving, setSaving] = useState(false); 
 
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
@@ -20,16 +20,12 @@ const Users = () => {
     phone_number: "",
     user_role: "",
   });
-
-  // 🔹 Validation errors
   const [errors, setErrors] = useState({});
-
-  // 🔹 Fetch Users
   const fetchUsers = async () => {
     try {
       setLoading(true);
       const data = await getUsersService();
-      setUsers(data.data.users); // adjust if your API shape differs
+      setUsers(data.data.users); 
     } catch (err) {
       console.error("Failed to fetch users:", err);
     } finally {
@@ -41,7 +37,6 @@ const Users = () => {
     fetchUsers();
   }, []);
 
-  // 🔹 Validate input fields
   const validateField = (name, value) => {
     let error = "";
 
@@ -53,7 +48,6 @@ const Users = () => {
     }
 
     if (name === "phone_number") {
-      // Must be exactly 11 digits
       const phoneRegex = /^[0-9]{11}$/;
       if (!phoneRegex.test(value)) {
         error = "Phone number must be exactly 11 digits.";
@@ -62,72 +56,57 @@ const Users = () => {
 
     setErrors((prev) => ({ ...prev, [name]: error }));
   };
-
-  // 🔹 Handle Input Change
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    // Allow only numbers for phone
     if (name === "phone_number") {
       if (!/^[0-9]*$/.test(value)) return;
     }
 
     setFormData({ ...formData, [name]: value });
-    validateField(name, value); // run validation instantly
+    validateField(name, value); 
   };
 
-  // 🔹 Add New User
   const handleAddUser = async () => {
-    const { email, phone_number, user_role } = formData;
+  const { email, phone_number, user_role } = formData;
+  if (!email || !user_role || !phone_number) {
+    return showAlert({
+      type: "error",
+      title: "Missing Fields",
+      text: "Email, Role and Phone Number are required",
+    });
+  }
+  if (Object.values(errors).some((err) => err)) {
+    return showAlert({
+      type: "error",
+      title: "Validation Error",
+      text: "Please fix the errors before submitting.",
+    });
+  }
 
-    // ✅ Required fields check
-    if (!email || !user_role || !phone_number) {
-      return showAlert({
-        type: "error",
-        title: "Missing Fields",
-        text: "Email, Role and Phone Number are required",
-      });
-    }
-
-    // ✅ Stop submission if there are validation errors
-    if (Object.values(errors).some((err) => err)) {
-      return showAlert({
-        type: "error",
-        title: "Validation Error",
-        text: "Please fix the errors before submitting.",
-      });
-    }
-
-    setSaving(true); // 🔹 start loader
-    try {
-      await createUserService(formData);
-
-      // 🔹 Refresh the users list immediately after adding
-      await fetchUsers();
-
-      setShowModal(false);
-      setFormData({
-        first_name: "",
-        last_name: "",
-        email: "",
-        phone_number: "",
-        user_role: "",
-      });
-      setErrors({}); // reset errors
-
-      await showAlert({ type: "success", title: "User added successfully!" });
-    } catch (error) {
-      await showAlert({
-        type: "error",
-        title: "Validation Error",
-        text: error.message, // backend validation (duplicate email/phone, etc.)
-      });
-    } finally {
-      setSaving(false); // 🔹 stop loader
-    }
-  };
-
-  // 🔹 Filter Users by search term
+  setSaving(true);
+  try {
+    await createUserService(formData);
+    await showAlert({ type: "success", title: "User added successfully!" });
+    setShowModal(false);
+    setFormData({
+      first_name: "",
+      last_name: "",
+      email: "",
+      phone_number: "",
+      user_role: "",
+    });
+    setErrors({});
+    fetchUsers();
+  } catch (error) {
+    await showAlert({
+      type: "error",
+      title: "Validation Error",
+      text: error.message,
+    });
+  } finally {
+    setSaving(false);
+  }
+};
   const filteredUsers = users.filter(
     (user) =>
       user.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -163,7 +142,6 @@ const Users = () => {
 
   return (
     <>
-      {/* 🔹 Add User Button */}
       <div className="flex justify-end px-4 mb-2">
         <Button
           variant="primary"
@@ -173,14 +151,10 @@ const Users = () => {
           Add User
         </Button>
       </div>
-
-      {/* 🔹 Users Table */}
       <div>
         <h2 className="text-lg text-gray-600">Users</h2>
         <ReusableTable columns={columns} data={filteredUsers} />
       </div>
-
-      {/* 🔹 Add User Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 shadow-lg w-full max-w-md">
